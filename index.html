@@ -1373,6 +1373,22 @@
 <!-- Audio element for background music -->
 <audio id="bgMusic" src="theme.mp3" loop></audio>
 
+<!-- Firebase (cloud sync so the checklist works across her phone/tablet/laptop) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDwV2u0HbSnQscZkohpoD3H0IIGuEa1zYE",
+        authDomain: "her-website-749e9.firebaseapp.com",
+        projectId: "her-website-749e9",
+        storageBucket: "her-website-749e9.firebasestorage.app",
+        messagingSenderId: "274474137279",
+        appId: "1:274474137279:web:55cb5a296da5c37ef1f80a"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const cloudDocRef = db.collection('checklist').doc('shared');
+</script>
 <script>
     /* =========================================================
        MY MAGICAL CHECKLIST — Script (Blue Theme only)
@@ -1400,11 +1416,36 @@
         }
     }
 
+    let suppressCloudEcho = false;
+
     function saveState() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { console.warn('Save failed', e); }
+        // Push to the cloud so every device stays in sync
+        suppressCloudEcho = true;
+        cloudDocRef.set(state).catch(e => console.warn('Cloud save failed', e));
     }
 
     let state = loadState();
+
+    /* ---------- Live cloud sync ----------
+       Listens for changes from ANY device and updates this page live. */
+    cloudDocRef.onSnapshot((doc) => {
+        if (suppressCloudEcho) { suppressCloudEcho = false; return; }
+        if (doc.exists) {
+            state = { ...structuredClone(defaultState), ...doc.data() };
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+            if (typeof renderCategories === 'function') {
+                renderCategories();
+                applyTheme();
+                $('#soundToggle').classList.toggle('muted', !state.soundOn);
+                $$('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === state.filter));
+                $('#sortSelect').value = state.sort;
+            }
+        } else {
+            // First ever load: seed the cloud with current (local) state
+            cloudDocRef.set(state).catch(e => console.warn('Initial cloud seed failed', e));
+        }
+    }, (err) => console.warn('Cloud sync listener failed', err));
 
     /* ---------- Sound engine (Web Audio) ---------- */
     const Sound = (() => {
