@@ -1,0 +1,2495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>✨ My Magical Checklist ✨</title>
+<style>
+    /* ---------- Self-hosted fonts (works offline / on slow internet) ---------- */
+    @font-face {
+        font-family: 'Cinzel';
+        src: url('fonts/Cinzel.woff2') format('woff2');
+        font-weight: 400 900;
+        font-style: normal;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Cormorant Garamond';
+        src: url('fonts/CormorantGaramond.woff2') format('woff2');
+        font-weight: 300 700;
+        font-style: normal;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Cormorant Garamond';
+        src: url('fonts/CormorantGaramond-Italic.woff2') format('woff2');
+        font-weight: 300 700;
+        font-style: italic;
+        font-display: swap;
+    }
+</style>
+<style>
+    /* =========================================================
+       MY MAGICAL CHECKLIST — Stylesheet (Blue Theme Only)
+       ========================================================= */
+
+    /* ---------- Theme variables (only blue) ---------- */
+    :root {
+        --font-display: 'Cinzel', serif;
+        --font-body: 'Cormorant Garamond', serif;
+        --radius-lg: 18px;
+        --radius-md: 12px;
+        --radius-sm: 8px;
+        --transition: 0.35s cubic-bezier(.2, .8, .2, 1);
+        --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.45);
+        --shadow-glow: 0 0 25px rgba(122, 184, 255, 0.25);
+
+        /* Blue theme */
+        --bg-0: #05080f;
+        --bg-1: #0a1424;
+        --bg-2: #0f1f3a;
+        --surface: rgba(15, 31, 58, 0.55);
+        --surface-solid: #0f1f3a;
+        --border: rgba(120, 170, 255, 0.2);
+        --border-strong: rgba(120, 170, 255, 0.4);
+        --text: #e4ecff;
+        --text-dim: #9fb2d9;
+        --text-faint: #5d7099;
+        --accent: #7ab8ff;
+        --accent-2: #4a8fe0;
+        --accent-glow: rgba(122, 184, 255, 0.55);
+        --parchment: #d8e4ff;
+        --danger: #ff6b6b;
+        --success: #6bffb0;
+        --fog: rgba(120, 170, 255, 0.06);
+    }
+
+    /* ---------- Base ---------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+        min-height: 100%;
+        background: var(--bg-0);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 18px;
+        line-height: 1.5;
+        overflow-x: hidden;
+        transition: background 0.8s ease, color 0.6s ease;
+    }
+
+    body {
+        background:
+            radial-gradient(ellipse at 20% 10%, var(--bg-2) 0%, transparent 55%),
+            radial-gradient(ellipse at 80% 90%, var(--bg-2) 0%, transparent 55%),
+            linear-gradient(180deg, var(--bg-0), var(--bg-1));
+    }
+
+    h1,h2,h3,h4 { font-family: var(--font-display); letter-spacing: 0.04em; }
+
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    input, textarea, select { font-family: inherit; color: inherit; }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, var(--accent-2), var(--accent));
+        border-radius: 10px;
+        border: 2px solid var(--bg-1);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ---------- Ambient layers ---------- */
+    .ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+
+    .fog {
+        position: absolute; inset: -20%;
+        background: radial-gradient(circle at 30% 40%, var(--fog), transparent 50%),
+                    radial-gradient(circle at 70% 60%, var(--fog), transparent 55%);
+        filter: blur(40px);
+        opacity: 0.7;
+        animation: fogDrift 40s ease-in-out infinite alternate;
+    }
+    .fog-2 { animation-duration: 55s; animation-direction: alternate-reverse; opacity: 0.5; }
+
+    @keyframes fogDrift {
+        0%   { transform: translate(0,0) scale(1); }
+        50%  { transform: translate(4%, -3%) scale(1.08); }
+        100% { transform: translate(-3%, 4%) scale(1.02); }
+    }
+
+    .particles, .sparkles { position: absolute; inset: 0; }
+
+    .particle {
+        position: absolute;
+        width: 3px; height: 3px;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--accent-glow), 0 0 16px var(--accent-glow);
+        opacity: 0;
+        animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+        0%   { transform: translateY(0) translateX(0); opacity: 0; }
+        10%  { opacity: 0.9; }
+        90%  { opacity: 0.6; }
+        100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
+    }
+
+    .sparkle {
+        position: absolute;
+        width: 2px; height: 2px;
+        background: var(--parchment);
+        border-radius: 50%;
+        box-shadow: 0 0 6px var(--accent);
+        animation: twinkle 3s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+        0%,100% { opacity: 0; transform: scale(0.5); }
+        50%     { opacity: 1; transform: scale(1.4); }
+    }
+
+    /* ---------- App shell ---------- */
+    .app-shell {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px;
+        min-height: 100vh;
+    }
+
+    /* ---------- Glass ---------- */
+    .glass {
+        background: var(--surface);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    /* ---------- Header ---------- */
+    .header {
+        padding: 22px 26px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    .header::before {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(120deg, transparent 40%, var(--accent-glow) 50%, transparent 60%);
+        opacity: 0.08;
+        pointer-events: none;
+    }
+
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        color: var(--parchment);
+        text-shadow: 0 0 18px var(--accent-glow), 0 2px 0 rgba(0,0,0,0.4);
+        letter-spacing: 0.08em;
+    }
+
+    .header-controls { display: flex; align-items: center; gap: 14px; }
+
+    .icon-btn {
+        width: 42px; height: 42px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        display: grid; place-items: center;
+        font-size: 1.1rem;
+        transition: var(--transition);
+    }
+    .icon-btn:hover {
+        background: var(--accent-glow);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px var(--accent-glow);
+    }
+    .icon-btn.muted .sound-icon::after { content: ""; }
+
+    .greeting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-top: 18px;
+        flex-wrap: wrap;
+    }
+    .greeting h2 {
+        font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+        color: var(--parchment);
+        text-shadow: 0 0 14px var(--accent-glow);
+    }
+    .date-line {
+        color: var(--text-dim);
+        font-style: italic;
+        margin-top: 4px;
+        letter-spacing: 0.05em;
+    }
+    .clock {
+        font-family: var(--font-display);
+        font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+        color: var(--accent);
+        letter-spacing: 0.1em;
+        padding: 8px 18px;
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        background: rgba(0,0,0,0.25);
+        text-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    /* Overall progress */
+    .overall-progress { margin-top: 22px; }
+    .overall-label {
+        display: flex; justify-content: space-between;
+        font-family: var(--font-display);
+        color: var(--text-dim);
+        letter-spacing: 0.08em;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+    }
+    .overall-label span:last-child { color: var(--accent); }
+    .progress-track {
+        height: 10px;
+        background: rgba(0,0,0,0.4);
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        position: relative;
+    }
+    .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent-2), var(--accent), var(--parchment));
+        border-radius: 999px;
+        transition: width 0.8s cubic-bezier(.2,.8,.2,1);
+        box-shadow: 0 0 14px var(--accent-glow);
+        position: relative;
+    }
+    .progress-fill::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: shimmer 2.4s linear infinite;
+    }
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    /* Toolbar */
+    .toolbar {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    .search-wrap {
+        flex: 1 1 260px;
+        position: relative;
+    }
+    .search-icon {
+        position: absolute;
+        left: 14px; top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.7;
+    }
+    #searchInput {
+        width: 100%;
+        padding: 12px 16px 12px 42px;
+        background: rgba(0,0,0,0.3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        color: var(--text);
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+    #searchInput:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .filter-group { display: flex; gap: 6px; }
+    .filter-btn {
+        padding: 10px 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.25);
+        color: var(--text-dim);
+        font-family: var(--font-display);
+        letter-spacing: 0.06em;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        transition: var(--transition);
+    }
+    .filter-btn:hover { color: var(--text); border-color: var(--border-strong); }
+    .filter-btn.active {
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+        color: #1a110b;
+        border-color: var(--accent);
+        box-shadow: 0 0 14px var(--accent-glow);
+    }
+    .sort-select {
+        padding: 10px 14px;
+        background: rgba(0,0,0,0.3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        color: var(--text);
+        font-family: var(--font-display);
+        letter-spacing: 0.05em;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .sort-select:hover { border-color: var(--accent); }
+    .sort-select option { background: var(--surface-solid); color: var(--text); }
+
+    /* ---------- Categories ---------- */
+    .main { position: relative; z-index: 1; }
+    .categories {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 22px;
+    }
+
+    .category-card {
+        position: relative;
+        padding: 22px;
+        animation: cardIn 0.6s cubic-bezier(.2,.8,.2,1) both;
+        transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+    }
+    @keyframes cardIn {
+        from { opacity: 0; transform: translateY(30px) scale(0.96); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .category-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--border-strong);
+        box-shadow: var(--shadow-soft), 0 0 30px var(--accent-glow);
+    }
+    .category-card::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, transparent 30%, var(--accent-glow) 50%, transparent 70%);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+    .category-card:hover::before { opacity: 1; }
+
+    .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    .card-title {
+        font-size: 1.4rem;
+        color: var(--parchment);
+        text-shadow: 0 0 10px var(--accent-glow);
+        word-break: break-word;
+    }
+    .card-count {
+        font-family: var(--font-display);
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-top: 4px;
+    }
+
+    .collapse-btn {
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.3);
+        display: grid; place-items: center;
+        transition: var(--transition);
+        flex-shrink: 0;
+    }
+    .collapse-btn:hover { background: var(--accent-glow); color: #1a110b; }
+    .collapse-btn .chev { transition: transform 0.4s ease; display: inline-block; }
+    .category-card.collapsed .collapse-btn .chev { transform: rotate(-90deg); }
+
+    .card-progress {
+        height: 6px;
+        background: rgba(0,0,0,0.4);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-bottom: 14px;
+        border: 1px solid var(--border);
+    }
+    .card-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent-2), var(--accent));
+        border-radius: 999px;
+        transition: width 0.6s cubic-bezier(.2,.8,.2,1);
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+    }
+    .card-btn {
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.25);
+        color: var(--text-dim);
+        font-family: var(--font-display);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+    .card-btn:hover {
+        color: var(--parchment);
+        border-color: var(--accent);
+        background: rgba(122, 184, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    .card-btn.danger:hover {
+        border-color: var(--danger);
+        background: rgba(192,57,43,0.15);
+        color: #ffb3a8;
+    }
+
+    /* Ripple */
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        transform: scale(0);
+        background: rgba(255,255,255,0.35);
+        animation: rippleAnim 0.6s ease-out;
+        pointer-events: none;
+    }
+    @keyframes rippleAnim {
+        to { transform: scale(4); opacity: 0; }
+    }
+
+    /* Items list */
+    .items-list {
+        display: grid;
+        gap: 8px;
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 4px;
+        transition: max-height 0.5s ease, opacity 0.4s ease;
+    }
+    .category-card.collapsed .items-list,
+    .category-card.collapsed .card-actions { 
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        margin: 0;
+    }
+
+    .add-item-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    .add-item-row input {
+        flex: 1;
+        padding: 10px 14px;
+        background: rgba(0,0,0,0.3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text);
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+    .add-item-row input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .add-item-row button {
+        padding: 0 16px;
+        border-radius: var(--radius-sm);
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+        color: #1a110b;
+        font-family: var(--font-display);
+        letter-spacing: 0.08em;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+    .add-item-row button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px var(--accent-glow);
+    }
+
+    /* Item */
+    .item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        background: rgba(0,0,0,0.2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        animation: itemIn 0.4s ease both;
+        transition: var(--transition);
+    }
+    @keyframes itemIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    .item:hover {
+        border-color: var(--border-strong);
+        background: rgba(0,0,0,0.35);
+    }
+
+    .checkbox {
+        width: 24px; height: 24px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        display: grid; place-items: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: var(--transition);
+        position: relative;
+    }
+    .checkbox:hover { box-shadow: 0 0 12px var(--accent-glow); transform: scale(1.08); }
+    .checkbox svg {
+        width: 14px; height: 14px;
+        stroke: var(--parchment);
+        stroke-width: 3;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 20;
+        stroke-dashoffset: 20;
+        transition: stroke-dashoffset 0.4s ease;
+    }
+    .item.done .checkbox {
+        background: var(--accent);
+        box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .item.done .checkbox svg { stroke-dashoffset: 0; }
+    .item.bounce .checkbox { animation: bounceTick 0.5s ease; }
+    @keyframes bounceTick {
+        0%,100% { transform: scale(1); }
+        40% { transform: scale(1.35); }
+        70% { transform: scale(0.9); }
+    }
+
+    .item-name {
+        flex: 1;
+        font-size: 1.1rem;
+        color: var(--text);
+        position: relative;
+        transition: color 0.4s ease;
+        word-break: break-word;
+    }
+    .item.done .item-name {
+        color: var(--text-faint);
+        font-style: italic;
+    }
+    .item.done .item-name::after {
+        content: "";
+        position: absolute;
+        left: 0; top: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--accent);
+        animation: strike 0.5s ease forwards;
+        box-shadow: 0 0 6px var(--accent-glow);
+    }
+    @keyframes strike {
+        to { width: 100%; }
+    }
+
+    .item-delete {
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        display: grid; place-items: center;
+        color: var(--text-faint);
+        transition: var(--transition);
+        opacity: 0.5;
+    }
+    .item:hover .item-delete { opacity: 1; }
+    .item-delete:hover {
+        background: rgba(192,57,43,0.2);
+        color: var(--danger);
+        transform: rotate(90deg);
+    }
+
+    .item.removing { animation: itemOut 0.4s ease forwards; }
+    @keyframes itemOut {
+        to { opacity: 0; transform: translateX(30px) scale(0.9); }
+    }
+
+    /* ---------- Empty state — GOLDEN SNITCH (movie-accurate) ---------- */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px 80px;
+        color: var(--text-dim);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    .empty-state h3 {
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+        color: var(--parchment);
+        text-shadow: 0 0 14px var(--accent-glow);
+        margin: 0;
+    }
+    .empty-state p {
+        font-style: italic;
+        letter-spacing: 0.04em;
+        margin: 0;
+        opacity: 0.8;
+    }
+    .empty-state.hidden { display: none; }
+
+    /* ---- The Golden Snitch (refined) ---- */
+    #snitchWrapper {
+        position: relative;
+        width: 160px;
+        height: 160px;
+        margin: 0 auto 10px;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: transform 0.1s ease;
+        filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.5));
+        touch-action: none; /* prevent scrolling on touch */
+    }
+    #snitchWrapper.flying {
+        position: fixed;
+        z-index: 9999;
+        margin: 0;
+        pointer-events: auto;
+        transition: none; /* we animate via JS */
+        filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.9));
+    }
+    #snitchWrapper.caught {
+        animation: caughtAnim 0.6s ease;
+    }
+    @keyframes caughtAnim {
+        0% { transform: scale(1); }
+        30% { transform: scale(1.6) rotate(20deg); }
+        60% { transform: scale(0.8) rotate(-10deg); }
+        100% { transform: scale(1) rotate(0deg); }
+    }
+    /* ensure the snitch is always clickable */
+    #snitchWrapper * {
+        pointer-events: none;
+    }
+
+    .snitch-wrapper {
+        /* used for static positioning inside empty state */
+        position: relative;
+        width: 160px;
+        height: 160px;
+        margin: 0 auto 10px;
+        cursor: pointer;
+        pointer-events: auto;
+    }
+
+    @keyframes snitchFloat {
+        0%,100% { transform: translateY(0) rotate(0deg); }
+        25%     { transform: translateY(-6px) rotate(2deg); }
+        75%     { transform: translateY(4px) rotate(-2deg); }
+    }
+
+    /* Body – more detailed gold gradient + engravings */
+    .snitch-body {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 54px;
+        height: 54px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 25%, #fef0a0, #e4b830 35%, #c99f2a 60%, #8a6d1a 90%);
+        box-shadow:
+            inset 0 -6px 14px rgba(0,0,0,0.6),
+            inset 0 6px 14px rgba(255,215,0,0.7),
+            0 0 40px rgba(212,175,55,0.6),
+            0 0 80px rgba(212,175,55,0.2);
+        z-index: 2;
+        animation: bodyPulse 2.4s ease-in-out infinite alternate;
+    }
+    /* Engraving lines (like movie snitch) */
+    .snitch-body::before {
+        content: "";
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        width: 80%;
+        height: 80%;
+        border-radius: 50%;
+        border: 1.5px solid rgba(90, 60, 20, 0.35);
+        background: radial-gradient(circle at 40% 30%, rgba(255, 240, 180, 0.15) 0%, transparent 60%);
+    }
+    .snitch-body::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 60%;
+        height: 2px;
+        transform: translate(-50%, -50%) rotate(20deg);
+        background: rgba(90, 60, 20, 0.2);
+        border-radius: 2px;
+        box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+    .snitch-dimple {
+        position: absolute;
+        top: 30%;
+        left: 35%;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 40%, rgba(0,0,0,0.2) 0%, transparent 70%);
+        transform: rotate(-20deg);
+        z-index: 3;
+    }
+
+    @keyframes bodyPulse {
+        0%   { box-shadow: inset 0 -6px 14px rgba(0,0,0,0.6), inset 0 6px 14px rgba(255,215,0,0.7), 0 0 40px rgba(212,175,55,0.6), 0 0 80px rgba(212,175,55,0.2); }
+        100% { box-shadow: inset 0 -6px 14px rgba(0,0,0,0.6), inset 0 6px 14px rgba(255,215,0,0.9), 0 0 60px rgba(212,175,55,0.8), 0 0 100px rgba(212,175,55,0.3); }
+    }
+
+    /* Wings – more movie-like shape with ribbed veins */
+    .snitch-wings {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .wing-svg {
+        position: absolute;
+        top: 50%;
+        transform-origin: center center;
+    }
+
+    .wing-left {
+        right: 50%;
+        transform: translate(10px, -50%) scaleX(-1);
+        animation: wingFlapLeft 0.10s ease-in-out infinite alternate;
+    }
+    .wing-right {
+        left: 50%;
+        transform: translate(-10px, -50%);
+        animation: wingFlapRight 0.10s ease-in-out infinite alternate;
+    }
+
+    /* Faster, more hummingbird-like flapping */
+    @keyframes wingFlapLeft {
+        0%   { transform: translate(10px, -50%) scaleX(-1) rotate(0deg) scaleY(1); }
+        100% { transform: translate(10px, -50%) scaleX(-1) rotate(-22deg) scaleY(0.5); }
+    }
+    @keyframes wingFlapRight {
+        0%   { transform: translate(-10px, -50%) rotate(0deg) scaleY(1); }
+        100% { transform: translate(-10px, -50%) rotate(22deg) scaleY(0.5); }
+    }
+
+    .wing-path {
+        filter: drop-shadow(0 0 8px rgba(212,175,55,0.6));
+    }
+
+    /* Glow ring */
+    .snitch-glow-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 130px;
+        height: 130px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%);
+        opacity: 0.5;
+        animation: glowPulse 2.8s ease-in-out infinite alternate;
+        z-index: 0;
+        pointer-events: none;
+    }
+    @keyframes glowPulse {
+        0%   { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+        100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.7; }
+    }
+
+    /* Sparkles around snitch */
+    .snitch-sparkles {
+        position: absolute;
+        inset: -30px;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .snitch-sparkle {
+        position: absolute;
+        width: 4px; height: 4px;
+        border-radius: 50%;
+        background: #f9e076;
+        box-shadow: 0 0 8px #d4af37, 0 0 16px #d4af37;
+        animation: sparkleFloat 2.8s ease-in-out infinite alternate;
+    }
+    .snitch-sparkle:nth-child(1) { top: 10%; left: 5%; animation-delay: 0.0s; }
+    .snitch-sparkle:nth-child(2) { top: 5%; right: 10%; animation-delay: 0.6s; width: 3px; height: 3px; }
+    .snitch-sparkle:nth-child(3) { bottom: 8%; left: 8%; animation-delay: 1.2s; width: 5px; height: 5px; }
+    .snitch-sparkle:nth-child(4) { bottom: 12%; right: 5%; animation-delay: 0.3s; }
+    .snitch-sparkle:nth-child(5) { top: 50%; left: -8%; animation-delay: 0.9s; width: 3px; height: 3px; }
+    .snitch-sparkle:nth-child(6) { top: 40%; right: -8%; animation-delay: 1.5s; }
+    .snitch-sparkle:nth-child(7) { top: 0%; left: 40%; animation-delay: 0.5s; width: 3px; height: 3px; }
+    .snitch-sparkle:nth-child(8) { bottom: 0%; right: 35%; animation-delay: 1.1s; }
+
+    @keyframes sparkleFloat {
+        0%   { transform: translate(0,0) scale(0.5); opacity: 0.2; }
+        100% { transform: translate(8px, -12px) scale(1.2); opacity: 1; }
+    }
+
+    /* ---------- FAB ---------- */
+    .fab {
+        position: fixed;
+        right: 30px; bottom: 30px;
+        width: 64px; height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+        color: #1a110b;
+        font-size: 2rem;
+        font-weight: 700;
+        display: grid; place-items: center;
+        box-shadow: 0 10px 30px var(--accent-glow), 0 0 40px var(--accent-glow);
+        z-index: 50;
+        transition: var(--transition);
+        animation: fabFloat 4s ease-in-out infinite;
+    }
+    @keyframes fabFloat {
+        0%,100% { transform: translateY(0); }
+        50%     { transform: translateY(-6px); }
+    }
+    .fab:hover {
+        transform: scale(1.1) rotate(90deg);
+        box-shadow: 0 14px 40px var(--accent-glow), 0 0 60px var(--accent-glow);
+    }
+    .fab-ring {
+        position: absolute; inset: -6px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        opacity: 0.6;
+        animation: ringPulse 2.4s ease-out infinite;
+    }
+    @keyframes ringPulse {
+        0%   { transform: scale(1); opacity: 0.6; }
+        100% { transform: scale(1.5); opacity: 0; }
+    }
+    .fab-plus { display: inline-block; transition: transform 0.4s ease; }
+    .fab-import {
+        right: 30px; bottom: 106px;
+        width: 52px; height: 52px;
+        font-size: 1.4rem;
+        animation: none;
+    }
+    .fab-import:hover { transform: scale(1.1); }
+    .import-preview-cat { font-family: var(--font-display); color: var(--accent); margin-top: 10px; }
+    .import-preview-item { padding-left: 16px; color: var(--text-dim); }
+    .import-preview-note { padding-left: 16px; font-style: italic; color: var(--text-faint); }
+
+    /* ---------- Modal ---------- */
+    .modal-backdrop {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(8px);
+        display: grid; place-items: center;
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+        padding: 20px;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+    .modal {
+        width: 100%;
+        max-width: 440px;
+        padding: 28px;
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+    }
+    .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
+    .modal h3 {
+        color: var(--parchment);
+        font-size: 1.5rem;
+        text-shadow: 0 0 10px var(--accent-glow);
+        margin-bottom: 6px;
+    }
+    .modal-sub { color: var(--text-dim); font-style: italic; margin-bottom: 18px; }
+    .modal-input {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(0,0,0,0.35);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        color: var(--text);
+        font-size: 1.05rem;
+        transition: var(--transition);
+        margin-bottom: 20px;
+    }
+    .modal-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn {
+        padding: 10px 20px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-display);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        transition: var(--transition);
+        border: 1px solid transparent;
+    }
+    .btn-ghost {
+        background: transparent;
+        border-color: var(--border);
+        color: var(--text-dim);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-strong); }
+    .btn-primary {
+        background: linear-gradient(135deg, var(--accent-2), var(--accent));
+        color: #1a110b;
+        font-weight: 700;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    /* ---------- Notes window (macOS style) ---------- */
+    .notes-window {
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0.85);
+        width: min(640px, 92vw);
+        height: min(480px, 80vh);
+        z-index: 90;
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.4s cubic-bezier(.2,.8,.2,1), opacity 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px var(--accent-glow);
+    }
+    .notes-window.open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    .notes-window.minimized {
+        transform: translate(-50%, 120%) scale(0.6);
+        opacity: 0;
+        pointer-events: none;
+    }
+    .notes-window.maximized {
+        width: 96vw; height: 92vh;
+    }
+
+    .notes-titlebar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        background: rgba(0,0,0,0.35);
+        border-bottom: 1px solid var(--border);
+    }
+    .traffic-lights { display: flex; gap: 8px; }
+    .tl {
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        border: none;
+        transition: var(--transition);
+        position: relative;
+    }
+    .tl.close    { background: #ff5f57; }
+    .tl.minimize { background: #febc2e; }
+    .tl.maximize { background: #28c840; }
+    .tl:hover { filter: brightness(1.2); transform: scale(1.1); }
+    .tl-spacer { width: 60px; }
+    .notes-title {
+        flex: 1;
+        text-align: center;
+        font-family: var(--font-display);
+        color: var(--parchment);
+        letter-spacing: 0.08em;
+        font-size: 0.95rem;
+    }
+
+    .notes-body {
+        flex: 1;
+        padding: 16px;
+        overflow: hidden;
+    }
+    #notesTextarea {
+        width: 100%; height: 100%;
+        background: transparent;
+        border: none;
+        resize: none;
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 1.1rem;
+        line-height: 1.7;
+        outline: none;
+        background-image: repeating-linear-gradient(
+            transparent, transparent 31px,
+            var(--border) 31px, var(--border) 32px
+        );
+        padding: 4px 6px;
+    }
+    #notesTextarea::placeholder { color: var(--text-faint); font-style: italic; }
+
+    /* ---------- Music window (macOS style) ---------- */
+    .music-window {
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.85);
+        width: min(420px, 92vw);
+        z-index: 91;
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.4s cubic-bezier(.2,.8,.2,1), opacity 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px var(--accent-glow);
+    }
+    .music-window.open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    .music-window.minimized {
+        transform: translate(-50%, 120%) scale(0.6);
+        opacity: 0;
+        pointer-events: none;
+    }
+    .music-window.maximized {
+        width: 96vw;
+        top: 10%;
+        transform: translate(-50%, 0%) scale(1);
+    }
+
+    .music-titlebar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        background: rgba(0,0,0,0.35);
+        border-bottom: 1px solid var(--border);
+    }
+    .music-title {
+        flex: 1;
+        text-align: center;
+        font-family: var(--font-display);
+        color: var(--parchment);
+        letter-spacing: 0.08em;
+        font-size: 0.95rem;
+    }
+    .music-body {
+        padding: 20px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .music-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .music-controls button {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: var(--text);
+        transition: var(--transition);
+        padding: 4px;
+    }
+    .music-controls button:hover {
+        transform: scale(1.1);
+        color: var(--accent);
+    }
+    #musicVolumeSlider {
+        flex: 1;
+        accent-color: var(--accent);
+        cursor: pointer;
+    }
+    #volumeLabel {
+        min-width: 40px;
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--text-dim);
+    }
+    .music-progress {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .music-progress span {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        font-variant-numeric: tabular-nums;
+    }
+    #musicProgressSlider {
+        flex: 1;
+        accent-color: var(--accent);
+        cursor: pointer;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 640px) {
+        .app-shell { padding: 14px; }
+        .header { padding: 16px; }
+        .categories { grid-template-columns: 1fr; }
+        .fab { right: 18px; bottom: 18px; width: 56px; height: 56px; font-size: 1.6rem; }
+        .filter-btn { padding: 8px 12px; font-size: 0.75rem; }
+        .clock { font-size: 1rem; padding: 6px 14px; }
+        #snitchWrapper { width: 130px; height: 130px; }
+        .snitch-body { width: 44px; height: 44px; }
+        .snitch-glow-ring { width: 100px; height: 100px; }
+        .wing-svg { width: 44px; height: 50px; }
+        .music-window { width: 95vw; }
+    }
+
+    /* ---------- Utility ---------- */
+    .hidden { display: none !important; }
+</style>
+</head>
+<body data-theme="blue">
+
+<!-- Ambient background layers -->
+<div class="ambient" aria-hidden="true">
+    <div class="fog fog-1"></div>
+    <div class="fog fog-2"></div>
+    <div class="particles" id="particles"></div>
+    <div class="sparkles" id="sparkles"></div>
+</div>
+
+<div class="app-shell">
+
+    <!-- Header -->
+    <header class="header glass">
+        <div class="header-top">
+            <h1 class="logo">Madhu Varsha's Checklist</h1>
+            <div class="header-controls">
+                <button class="icon-btn" id="soundToggle" title="Toggle sound">
+                    <span class="sound-icon">🔊</span>
+                </button>
+                <!-- 🎵 Music button -->
+                <button class="icon-btn" id="openMusicBtn" title="Background Music">🎵</button>
+            </div>
+        </div>
+
+        <div class="greeting-row">
+            <div class="greeting">
+                <h2 id="greetingText">Fair greetings, my lady.</h2>
+                <p class="date-line" id="dateLine">Monday, 1 January 2024</p>
+            </div>
+            <div class="clock" id="clock">00:00:00</div>
+        </div>
+
+        <!-- Overall progress -->
+        <div class="overall-progress">
+            <div class="overall-label">
+                <span>Overall Enchantment</span>
+                <span id="overallPercent">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="overallFill" style="width:0%"></div>
+            </div>
+        </div>
+
+        <!-- Search / Filter / Sort -->
+        <div class="toolbar">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search your spells..." />
+            </div>
+            <div class="filter-group" role="tablist">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+            </div>
+            <select id="sortSelect" class="sort-select">
+                <option value="recent">Recently Added</option>
+                <option value="alpha">Alphabetically</option>
+                <option value="most">Most Completed</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main">
+        <section id="categoriesContainer" class="categories"></section>
+
+        <div id="emptyState" class="empty-state">
+            <!-- Golden Snitch – with id for interaction -->
+            <div id="snitchWrapper" aria-hidden="true">
+                <div class="snitch-glow-ring"></div>
+                <div class="snitch-sparkles">
+                    <div class="snitch-sparkle"></div>
+                    <div class="snitch-sparkle"></div>
+                    <div class="snitch-sparkle"></div>
+                    <div class="snitch-sparkle"></div>
+                    <div class="snitch-sparkle"></div>
+                    <div class="snitch-sparkle"></div>
+                    <div class="snitch-sparkle"></div>
+                    <div class="snitch-sparkle"></div>
+                </div>
+                <div class="snitch-body">
+                    <div class="snitch-dimple"></div>
+                </div>
+                <div class="snitch-wings">
+                    <!-- Left Wing -->
+                    <svg class="wing-svg wing-left" viewBox="0 0 60 70" width="64" height="70">
+                        <defs>
+                            <linearGradient id="wingGradL" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%"   style="stop-color:#f9e076;stop-opacity:0.95" />
+                                <stop offset="40%"  style="stop-color:#d4af37;stop-opacity:0.9" />
+                                <stop offset="100%" style="stop-color:#b8942a;stop-opacity:0.6" />
+                            </linearGradient>
+                        </defs>
+                        <path class="wing-path"
+                        d="M 32,14
+                        C 20,8 6,16 2,28
+                        C -1,36 0,44 6,48
+                        C 12,52 20,52 26,46
+                        C 30,40 34,32 34,24
+                        C 34,18 33,14 32,14 Z"
+                        fill="url(#wingGradL)"
+                        stroke="#d4af37"
+                        stroke-width="0.8"
+                        opacity="0.9" />
+                        <path d="M 32,14 Q 16,20 2,28" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.5" />
+                        <path d="M 33,20 Q 16,26 4,34" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.45" />
+                        <path d="M 33,26 Q 18,32 6,40" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.4" />
+                        <path d="M 32,32 Q 18,38 10,44" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.35" />
+                        <path d="M 30,38 Q 18,44 14,48" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.3" />
+                        <path d="M 18,18 Q 24,16 28,18" stroke="#f9e076" stroke-width="0.8" fill="none" opacity="0.3" />
+                        <path d="M 14,26 Q 20,24 26,28" stroke="#f9e076" stroke-width="0.8" fill="none" opacity="0.3" />
+                        <path d="M 10,34 Q 18,32 24,36" stroke="#f9e076" stroke-width="0.8" fill="none" opacity="0.25" />
+                    </svg>
+                    <!-- Right Wing -->
+                    <svg class="wing-svg wing-right" viewBox="0 0 60 70" width="64" height="70">
+                        <defs>
+                            <linearGradient id="wingGradR" x1="100%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%"   style="stop-color:#f9e076;stop-opacity:0.95" />
+                                <stop offset="40%"  style="stop-color:#d4af37;stop-opacity:0.9" />
+                                <stop offset="100%" style="stop-color:#b8942a;stop-opacity:0.6" />
+                            </linearGradient>
+                        </defs>
+                        <path class="wing-path"
+                        d="M 28,14
+                        C 40,8 54,16 58,28
+                        C 61,36 60,44 54,48
+                        C 48,52 40,52 34,46
+                        C 30,40 26,32 26,24
+                        C 26,18 27,14 28,14 Z"
+                        fill="url(#wingGradR)"
+                        stroke="#d4af37"
+                        stroke-width="0.8"
+                        opacity="0.9" />
+                        <path d="M 28,14 Q 44,20 58,28" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.5" />
+                        <path d="M 27,20 Q 44,26 56,34" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.45" />
+                        <path d="M 27,26 Q 42,32 54,40" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.4" />
+                        <path d="M 28,32 Q 42,38 50,44" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.35" />
+                        <path d="M 30,38 Q 42,44 46,48" stroke="#f9e076" stroke-width="1.2" fill="none" opacity="0.3" />
+                        <path d="M 42,18 Q 36,16 32,18" stroke="#f9e076" stroke-width="0.8" fill="none" opacity="0.3" />
+                        <path d="M 46,26 Q 40,24 34,28" stroke="#f9e076" stroke-width="0.8" fill="none" opacity="0.3" />
+                        <path d="M 50,34 Q 42,32 36,36" stroke="#f9e076" stroke-width="0.8" fill="none" opacity="0.25" />
+                    </svg>
+                </div>
+            </div>
+
+            <h3>Your spellbook awaits its first chapter…</h3>
+            <p>Tap the glowing ✦ below to conjure your first category.</p>
+        </div>
+    </main>
+
+    <!-- Floating action buttons -->
+    <button class="fab fab-import" id="fabImport" title="Import from PDF/Word/Text" aria-label="Import checklist from a document">
+        <span class="fab-plus">⇪</span>
+    </button>
+    <button class="fab" id="fabAdd" title="New Category" aria-label="Create new category">
+        <span class="fab-plus">✦</span>
+        <span class="fab-ring"></span>
+    </button>
+</div>
+
+<!-- Import modal -->
+<div class="modal-backdrop" id="importBackdrop" aria-hidden="true">
+    <div class="modal glass" role="dialog" aria-modal="true" style="max-width:520px;">
+        <h3>Import a Checklist</h3>
+        <p class="modal-sub">Upload a PDF, Word (.docx), or plain text file. Lines that look like bullet points or numbered items become checklist items; a plain line becomes a new category; a line starting with "Note:" is saved as that category's note.</p>
+        <input type="file" id="importFileInput" accept=".pdf,.docx,.txt" class="modal-input" style="padding:10px;" />
+        <div id="importStatus" style="margin-top:10px; font-style:italic; color: var(--text-dim); min-height: 20px;"></div>
+        <div id="importPreview" style="max-height:240px; overflow-y:auto; margin-top:10px; display:none; font-size:0.92rem; line-height:1.5; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 12px;"></div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" id="importCancelBtn">Cancel</button>
+            <button class="btn btn-primary" id="importConfirmBtn" disabled>✨ Add to Checklist</button>
+        </div>
+    </div>
+</div>
+
+<!-- Category creation modal -->
+<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+    <div class="modal glass" role="dialog" aria-modal="true">
+        <h3>Conjure a New Chapter</h3>
+        <p class="modal-sub">Name your new category of enchantments.</p>
+        <input type="text" id="categoryNameInput" class="modal-input" placeholder="e.g. Potions to Brew" maxlength="40" />
+        <div class="modal-actions">
+            <button class="btn btn-ghost" id="modalCancel">Dismiss</button>
+            <button class="btn btn-primary" id="modalConfirm">✨ Create</button>
+        </div>
+    </div>
+</div>
+
+<!-- Notes window (macOS style) -->
+<div class="notes-window glass" id="notesWindow" aria-hidden="true">
+    <div class="notes-titlebar">
+        <div class="traffic-lights">
+            <button class="tl close" data-action="close" title="Close"></button>
+            <button class="tl minimize" data-action="minimize" title="Minimize"></button>
+            <button class="tl maximize" data-action="maximize" title="Maximize"></button>
+        </div>
+        <div class="notes-title" id="notesTitle">Notes</div>
+        <div class="tl-spacer"></div>
+    </div>
+    <div class="notes-body">
+        <textarea id="notesTextarea" placeholder="Whisper your thoughts upon this parchment…"></textarea>
+    </div>
+</div>
+
+<!-- 🎵 Music Window (macOS style) -->
+<div class="music-window glass" id="musicWindow" aria-hidden="true">
+    <div class="music-titlebar">
+        <div class="traffic-lights">
+            <button class="tl close" data-action="close-music" title="Close"></button>
+            <button class="tl minimize" data-action="minimize-music" title="Minimize"></button>
+            <button class="tl maximize" data-action="maximize-music" title="Maximize"></button>
+        </div>
+        <div class="music-title">🎵 Background Melody</div>
+        <div class="tl-spacer"></div>
+    </div>
+    <div class="music-body">
+        <div class="music-controls">
+            <button id="playPauseBtn" title="Play/Pause">⏸️</button>
+            <input type="range" id="musicVolumeSlider" min="0" max="1" step="0.01" value="0.5" />
+            <button id="musicMuteBtn" title="Mute/Unmute">🔊</button>
+            <span id="volumeLabel">50%</span>
+        </div>
+        <div class="music-progress">
+            <span id="currentTime">0:00</span>
+            <input type="range" id="musicProgressSlider" min="0" max="1" step="0.001" value="0" />
+            <span id="totalTime">0:00</span>
+        </div>
+    </div>
+</div>
+
+<!-- Audio element for background music -->
+<audio id="bgMusic" src="theme.mp3" loop></audio>
+
+<!-- Firebase (cloud sync so the checklist works across her phone/tablet/laptop) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<!-- Document parsing (for the Import feature) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.7.0/mammoth.browser.min.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDwV2u0HbSnQscZkohpoD3H0IIGuEa1zYE",
+        authDomain: "her-website-749e9.firebaseapp.com",
+        projectId: "her-website-749e9",
+        storageBucket: "her-website-749e9.firebasestorage.app",
+        messagingSenderId: "274474137279",
+        appId: "1:274474137279:web:55cb5a296da5c37ef1f80a"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const cloudDocRef = db.collection('checklist').doc('shared');
+</script>
+<script>
+    /* =========================================================
+       MY MAGICAL CHECKLIST — Script (Blue Theme only)
+       ========================================================= */
+
+    /* ---------- Storage helpers ---------- */
+    const STORAGE_KEY = 'magicalChecklist.v1';
+    const defaultState = {
+        categories: [],
+        theme: 'blue',
+        soundOn: true,
+        filter: 'all',
+        sort: 'recent'
+    };
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return structuredClone(defaultState);
+            const parsed = JSON.parse(raw);
+            return { ...structuredClone(defaultState), ...parsed };
+        } catch (e) {
+            console.warn('State load failed, resetting', e);
+            return structuredClone(defaultState);
+        }
+    }
+
+    let suppressCloudEcho = false;
+
+    function saveState() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { console.warn('Save failed', e); }
+        // Push to the cloud so every device stays in sync
+        suppressCloudEcho = true;
+        cloudDocRef.set(state).catch(e => console.warn('Cloud save failed', e));
+    }
+
+    let state = loadState();
+
+    /* ---------- Live cloud sync ----------
+       Listens for changes from ANY device and updates this page live. */
+    cloudDocRef.onSnapshot((doc) => {
+        if (suppressCloudEcho) { suppressCloudEcho = false; return; }
+        if (doc.exists) {
+            state = { ...structuredClone(defaultState), ...doc.data() };
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+            if (typeof renderCategories === 'function') {
+                renderCategories();
+                applyTheme();
+                $('#soundToggle').classList.toggle('muted', !state.soundOn);
+                $$('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === state.filter));
+                $('#sortSelect').value = state.sort;
+            }
+        } else {
+            // First ever load: seed the cloud with current (local) state
+            cloudDocRef.set(state).catch(e => console.warn('Initial cloud seed failed', e));
+        }
+    }, (err) => console.warn('Cloud sync listener failed', err));
+
+    /* ---------- Sound engine (Web Audio) ---------- */
+    const Sound = (() => {
+        let ctx = null;
+        function ensure() {
+            if (!ctx) {
+                try { ctx = new(window.AudioContext || window.webkitAudioContext)(); } catch (e) { ctx = null; }
+            }
+            return ctx;
+        }
+        function tone({ freq = 440, dur = 0.15, type = 'sine', vol = 0.08, slide = 0 } = {}) {
+            if (!state.soundOn) return;
+            const ac = ensure();
+            if (!ac) return;
+            const osc = ac.createOscillator();
+            const gain = ac.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, ac.currentTime);
+            if (slide) osc.frequency.exponentialRampToValueAtTime(Math.max(40, freq + slide), ac.currentTime + dur);
+            gain.gain.setValueAtTime(0, ac.currentTime);
+            gain.gain.linearRampToValueAtTime(vol, ac.currentTime + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + dur);
+            osc.connect(gain).connect(ac.destination);
+            osc.start();
+            osc.stop(ac.currentTime + dur + 0.02);
+        }
+        return {
+            click: () => tone({ freq: 720, dur: 0.08, type: 'triangle', vol: 0.05 }),
+            tick: () => {
+                tone({ freq: 880, dur: 0.09, type: 'sine', vol: 0.08, slide: 220 });
+                setTimeout(() => tone({ freq: 1320, dur: 0.12, type: 'sine', vol: 0.06 }), 70);
+            },
+            open: () => tone({ freq: 520, dur: 0.22, type: 'sine', vol: 0.07, slide: 260 }),
+            close: () => tone({ freq: 640, dur: 0.18, type: 'sine', vol: 0.06, slide: -200 }),
+            create: () => {
+                tone({ freq: 660, dur: 0.1, type: 'triangle' });
+                setTimeout(() => tone({ freq: 990, dur: 0.15, type: 'triangle' }), 90);
+            },
+            delete: () => tone({ freq: 300, dur: 0.2, type: 'sawtooth', vol: 0.05, slide: -120 }),
+            success: () => {
+                tone({ freq: 1047, dur: 0.12, type: 'sine', vol: 0.1 });
+                setTimeout(() => tone({ freq: 1319, dur: 0.12, type: 'sine', vol: 0.1 }), 130);
+                setTimeout(() => tone({ freq: 1568, dur: 0.18, type: 'sine', vol: 0.1 }), 260);
+            },
+            fail: () => tone({ freq: 300, dur: 0.3, type: 'sawtooth', vol: 0.06, slide: -80 })
+        };
+    })();
+
+    /* ---------- Utilities ---------- */
+    const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+    function ripple(e, el) {
+        const r = document.createElement('span');
+        r.className = 'ripple';
+        const rect = el.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        r.style.width = r.style.height = size + 'px';
+        r.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        r.style.top = (e.clientY - rect.top - size / 2) + 'px';
+        el.appendChild(r);
+        setTimeout(() => r.remove(), 650);
+    }
+
+    /* ---------- Ambient particles ---------- */
+    function initAmbient() {
+        const particles = $('#particles');
+        const sparkles = $('#sparkles');
+        const pCount = window.innerWidth < 640 ? 18 : 35;
+        const sCount = window.innerWidth < 640 ? 15 : 28;
+
+        for (let i = 0; i < pCount; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.bottom = '-10px';
+            p.style.animationDuration = (12 + Math.random() * 18) + 's';
+            p.style.animationDelay = (Math.random() * 15) + 's';
+            p.style.opacity = 0.4 + Math.random() * 0.5;
+            particles.appendChild(p);
+        }
+        for (let i = 0; i < sCount; i++) {
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 100 + '%';
+            s.style.animationDelay = (Math.random() * 3) + 's';
+            s.style.animationDuration = (2 + Math.random() * 3) + 's';
+            sparkles.appendChild(s);
+        }
+    }
+
+    /* ---------- Clock / Greeting ---------- */
+    function updateClock() {
+        const now = new Date();
+        const h = now.getHours();
+        const pad = n => String(n).padStart(2, '0');
+        $('#clock').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
+        let greet = "Rest thee well, my Liege, for my blade keepeth vigil o'er thy dreams.";
+        if (h >= 5 && h < 12) {
+            greet = "Awake, fair Queen, for the morning sun doth bow to thy radiance.";
+        } else if (h >= 12 && h < 19) {
+            greet = "The golden day declineth, yet thy sovereign grace remaineth unmatched.";
+        }
+        $('#greetingText').textContent = greet;
+
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+            'November', 'December'
+        ];
+        $('#dateLine').textContent =
+            `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    }
+
+    /* ---------- Theme (only blue) ---------- */
+    function applyTheme() {
+        document.body.dataset.theme = 'blue';
+        state.theme = 'blue';
+        saveState();
+    }
+
+    /* ---------- Progress calculations ---------- */
+    function computeOverall() {
+        let total = 0,
+            done = 0;
+        state.categories.forEach(c => {
+            total += c.items.length;
+            done += c.items.filter(i => i.done).length;
+        });
+        const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+        $('#overallPercent').textContent = pct + '%';
+        $('#overallFill').style.width = pct + '%';
+    }
+
+    /* ---------- Rendering ---------- */
+    function getFilteredSortedCategories() {
+        const q = $('#searchInput').value.trim().toLowerCase();
+        const filter = state.filter;
+
+        let cats = state.categories.map(c => {
+            let items = c.items.slice();
+            if (q) items = items.filter(i => i.name.toLowerCase().includes(q));
+            if (filter === 'completed') items = items.filter(i => i.done);
+            if (filter === 'pending') items = items.filter(i => !i.done);
+            return { ...c, items };
+        });
+
+        if (state.sort === 'alpha') {
+            cats.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (state.sort === 'most') {
+            cats.sort((a, b) => {
+                const aDone = a.items.filter(i => i.done).length;
+                const bDone = b.items.filter(i => i.done).length;
+                return bDone - aDone || b.createdAt - a.createdAt;
+            });
+        } else {
+            cats.sort((a, b) => b.createdAt - a.createdAt);
+        }
+
+        return cats;
+    }
+
+    function renderCategories() {
+        const container = $('#categoriesContainer');
+        const cats = getFilteredSortedCategories();
+        container.innerHTML = '';
+
+        const empty = $('#emptyState');
+        empty.classList.toggle('hidden', state.categories.length > 0);
+
+        cats.forEach(cat => {
+            const total = cat.items.length;
+            const done = cat.items.filter(i => i.done).length;
+            const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+
+            const card = document.createElement('article');
+            card.className = 'category-card glass' + (cat.collapsed ? ' collapsed' : '');
+            card.dataset.id = cat.id;
+
+            card.innerHTML = `
+                <header class="card-head">
+                    <div>
+                        <h3 class="card-title">${escapeHtml(cat.name)}</h3>
+                        <div class="card-count">${done} / ${total} enchanted</div>
+                    </div>
+                    <button class="collapse-btn" data-action="collapse" title="Collapse">
+                        <span class="chev">▾</span>
+                    </button>
+                </header>
+
+                <div class="card-progress"><div class="card-progress-fill" style="width:${pct}%"></div></div>
+
+                <div class="card-actions">
+                    <button class="card-btn" data-action="focus-add">＋ Add Item</button>
+                    <button class="card-btn" data-action="notes">📜 Notes</button>
+                    <button class="card-btn danger" data-action="delete">🗑 Delete</button>
+                </div>
+
+                <div class="items-list">
+                    ${cat.items.map(item => renderItem(item)).join('')}
+                </div>
+
+                <div class="add-item-row">
+                    <input type="text" placeholder="Inscribe a new task..." maxlength="120" data-role="new-item" />
+                    <button data-action="add-item">Cast</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        computeOverall();
+        // After rendering, ensure Snitch is reset if it was flying (but empty state hidden)
+        if (state.categories.length > 0) {
+            if (snitchGame.isFlying) {
+                snitchGame.stopFlying(false);
+            }
+        }
+    }
+
+    function renderItem(item) {
+        return `
+            <div class="item ${item.done ? 'done' : ''}" data-item-id="${item.id}">
+                <div class="checkbox" data-action="toggle">
+                    <svg viewBox="0 0 20 20"><polyline points="4,10 9,15 16,5"></polyline></svg>
+                </div>
+                <div class="item-name">${escapeHtml(item.name)}</div>
+                <button class="item-delete" data-action="delete-item" title="Delete">✕</button>
+            </div>
+        `;
+    }
+
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        } [c]));
+    }
+
+    /* ---------- Category actions ---------- */
+    function addCategory(name) {
+        name = name.trim();
+        if (!name) return;
+        state.categories.unshift({
+            id: uid(),
+            name,
+            items: [],
+            notes: '',
+            collapsed: false,
+            createdAt: Date.now()
+        });
+        saveState();
+        renderCategories();
+        Sound.create();
+    }
+
+    function deleteCategory(id) {
+        const cat = state.categories.find(c => c.id === id);
+        if (!cat) return;
+        if (!confirm(`Banish "${cat.name}" and all its tasks?`)) return;
+        state.categories = state.categories.filter(c => c.id !== id);
+        saveState();
+        renderCategories();
+        Sound.delete();
+    }
+
+    function toggleCollapse(id) {
+        const cat = state.categories.find(c => c.id === id);
+        if (!cat) return;
+        cat.collapsed = !cat.collapsed;
+        saveState();
+        const card = $(`.category-card[data-id="${id}"]`);
+        if (card) card.classList.toggle('collapsed', cat.collapsed);
+        Sound.click();
+    }
+
+    function addItem(catId, name) {
+        name = name.trim();
+        if (!name) return;
+        const cat = state.categories.find(c => c.id === catId);
+        if (!cat) return;
+        cat.items.push({ id: uid(), name, done: false, createdAt: Date.now() });
+        saveState();
+        renderCategories();
+        Sound.click();
+    }
+
+    function toggleItem(catId, itemId) {
+        const cat = state.categories.find(c => c.id === catId);
+        if (!cat) return;
+        const item = cat.items.find(i => i.id === itemId);
+        if (!item) return;
+        item.done = !item.done;
+        saveState();
+
+        const card = $(`.category-card[data-id="${catId}"]`);
+        const el = card?.querySelector(`.item[data-item-id="${itemId}"]`);
+        if (el) {
+            el.classList.toggle('done', item.done);
+            if (item.done) {
+                el.classList.add('bounce');
+                setTimeout(() => el.classList.remove('bounce'), 500);
+                Sound.tick();
+            } else {
+                Sound.click();
+            }
+        }
+
+        if (card) {
+            const total = cat.items.length;
+            const done = cat.items.filter(i => i.done).length;
+            const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+            card.querySelector('.card-count').textContent = `${done} / ${total} enchanted`;
+            card.querySelector('.card-progress-fill').style.width = pct + '%';
+        }
+        computeOverall();
+    }
+
+    function deleteItem(catId, itemId) {
+        const cat = state.categories.find(c => c.id === catId);
+        if (!cat) return;
+        const card = $(`.category-card[data-id="${catId}"]`);
+        const el = card?.querySelector(`.item[data-item-id="${itemId}"]`);
+        if (el) {
+            el.classList.add('removing');
+            setTimeout(() => {
+                cat.items = cat.items.filter(i => i.id !== itemId);
+                saveState();
+                renderCategories();
+            }, 380);
+        } else {
+            cat.items = cat.items.filter(i => i.id !== itemId);
+            saveState();
+            renderCategories();
+        }
+        Sound.delete();
+    }
+
+    /* ---------- Modal ---------- */
+    const modal = {
+        backdrop: $('#modalBackdrop'),
+        input: $('#categoryNameInput'),
+        open() {
+            this.backdrop.classList.add('open');
+            this.input.value = '';
+            setTimeout(() => this.input.focus(), 200);
+            Sound.open();
+        },
+        close() {
+            this.backdrop.classList.remove('open');
+            Sound.close();
+        },
+        confirm() {
+            addCategory(this.input.value);
+            this.close();
+        }
+    };
+
+    /* ---------- Notes window ---------- */
+    const notes = {
+        win: $('#notesWindow'),
+        title: $('#notesTitle'),
+        area: $('#notesTextarea'),
+        currentCatId: null,
+
+        open(catId) {
+            const cat = state.categories.find(c => c.id === catId);
+            if (!cat) return;
+            this.currentCatId = catId;
+            this.title.textContent = `Notes — ${cat.name}`;
+            this.area.value = cat.notes || '';
+            this.win.classList.remove('minimized', 'maximized');
+            this.win.classList.add('open');
+            this.win.setAttribute('aria-hidden', 'false');
+            Sound.open();
+            setTimeout(() => this.area.focus(), 250);
+        },
+        close() {
+            this.win.classList.remove('open', 'maximized', 'minimized');
+            this.win.setAttribute('aria-hidden', 'true');
+            this.save();
+            Sound.close();
+        },
+        save() {
+            if (!this.currentCatId) return;
+            const cat = state.categories.find(c => c.id === this.currentCatId);
+            if (cat) { cat.notes = this.area.value;
+                saveState(); }
+        }
+    };
+
+    /* ---------- SNITCH INTERACTION (Catch the Snitch!) ---------- */
+    const snitchGame = {
+        wrapper: null,
+        isFlying: false,
+        isCaught: false,
+        timer: null,
+        animFrame: null,
+        originalRect: null,
+        currentX: 0,
+        currentY: 0,
+        targetX: 0,
+        targetY: 0,
+        speed: 12,
+        mouseX: 0,
+        mouseY: 0,
+
+        init() {
+            this.wrapper = document.getElementById('snitchWrapper');
+            if (!this.wrapper) return;
+
+            this.wrapper.addEventListener('click', (e) => this.onClick(e));
+            this.wrapper.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.onClick(e);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                this.mouseX = e.clientX;
+                this.mouseY = e.clientY;
+            });
+            document.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                if (touch) {
+                    this.mouseX = touch.clientX;
+                    this.mouseY = touch.clientY;
+                }
+            }, { passive: true });
+        },
+
+        onClick(e) {
+            if (!this.isFlying) {
+                this.startFlying();
+            } else {
+                this.catchSnitch();
+            }
+        },
+
+        startFlying() {
+            if (this.isFlying) return;
+            if (state.categories.length > 0) return;
+
+            const rect = this.wrapper.getBoundingClientRect();
+            this.originalRect = rect;
+
+            this.wrapper.classList.add('flying');
+            this.wrapper.style.left = rect.left + 'px';
+            this.wrapper.style.top = rect.top + 'px';
+            this.wrapper.style.width = rect.width + 'px';
+            this.wrapper.style.height = rect.height + 'px';
+            this.currentX = rect.left;
+            this.currentY = rect.top;
+
+            this.pickNewTarget();
+
+            this.isFlying = true;
+            this.isCaught = false;
+
+            Sound.open();
+
+            this.animFrame = requestAnimationFrame(() => this.moveLoop());
+
+            this.timer = setTimeout(() => {
+                if (this.isFlying && !this.isCaught) {
+                    this.stopFlying(false);
+                }
+            }, 7000);
+        },
+
+        pickNewTarget() {
+            const padding = 60;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const sw = this.wrapper.offsetWidth || 160;
+            const sh = this.wrapper.offsetHeight || 160;
+            this.targetX = Math.random() * (w - sw - padding * 2) + padding;
+            this.targetY = Math.random() * (h - sh - padding * 2) + padding;
+        },
+
+        moveLoop() {
+            if (!this.isFlying) return;
+
+            const dx = this.targetX - this.currentX;
+            const dy = this.targetY - this.currentY;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < 10) {
+                this.pickNewTarget();
+            }
+
+            const cx = this.currentX + (this.wrapper.offsetWidth || 160) / 2;
+            const cy = this.currentY + (this.wrapper.offsetHeight || 160) / 2;
+            const mouseDx = cx - this.mouseX;
+            const mouseDy = cy - this.mouseY;
+            const mouseDist = Math.hypot(mouseDx, mouseDy);
+            const repulsionRadius = 200;
+            let repX = 0,
+                repY = 0;
+            if (mouseDist < repulsionRadius && mouseDist > 0) {
+                const force = (repulsionRadius - mouseDist) / repulsionRadius * 14;
+                repX = (mouseDx / mouseDist) * force;
+                repY = (mouseDy / mouseDist) * force;
+            }
+
+            let moveX = dx / (dist || 1) * this.speed + repX;
+            let moveY = dy / (dist || 1) * this.speed + repY;
+
+            const maxSpeed = 16;
+            const totalSpeed = Math.hypot(moveX, moveY);
+            if (totalSpeed > maxSpeed) {
+                moveX = (moveX / totalSpeed) * maxSpeed;
+                moveY = (moveY / totalSpeed) * maxSpeed;
+            }
+
+            this.currentX += moveX;
+            this.currentY += moveY;
+
+            const sw = this.wrapper.offsetWidth || 160;
+            const sh = this.wrapper.offsetHeight || 160;
+            this.currentX = Math.max(0, Math.min(window.innerWidth - sw, this.currentX));
+            this.currentY = Math.max(0, Math.min(window.innerHeight - sh, this.currentY));
+
+            this.wrapper.style.left = this.currentX + 'px';
+            this.wrapper.style.top = this.currentY + 'px';
+
+            this.animFrame = requestAnimationFrame(() => this.moveLoop());
+        },
+
+        catchSnitch() {
+            if (!this.isFlying || this.isCaught) return;
+            this.isCaught = true;
+            Sound.success();
+            this.wrapper.classList.add('caught');
+            setTimeout(() => this.wrapper.classList.remove('caught'), 600);
+            setTimeout(() => {
+                this.stopFlying(true);
+            }, 500);
+        },
+
+        stopFlying(caught) {
+            if (this.animFrame) {
+                cancelAnimationFrame(this.animFrame);
+                this.animFrame = null;
+            }
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+            this.isFlying = false;
+
+            if (!caught && !this.isCaught) {
+                Sound.fail();
+            }
+
+            this.wrapper.classList.remove('flying');
+            this.wrapper.style.left = '';
+            this.wrapper.style.top = '';
+            this.wrapper.style.width = '';
+            this.wrapper.style.height = '';
+            void this.wrapper.offsetWidth;
+
+            this.isCaught = false;
+        }
+    };
+
+    /* ---------- Background Music ---------- */
+    const bgMusic = document.getElementById('bgMusic');
+    const musicWindow = document.getElementById('musicWindow');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const musicVolumeSlider = document.getElementById('musicVolumeSlider');
+    const musicMuteBtn = document.getElementById('musicMuteBtn');
+    const volumeLabel = document.getElementById('volumeLabel');
+    const musicProgressSlider = document.getElementById('musicProgressSlider');
+    const currentTimeLabel = document.getElementById('currentTime');
+    const totalTimeLabel = document.getElementById('totalTime');
+
+    // Set initial volume
+    bgMusic.volume = parseFloat(musicVolumeSlider.value);
+    updateVolumeLabel();
+
+    // --- Music window controls (traffic lights) ---
+    document.querySelector('[data-action="close-music"]').addEventListener('click', () => {
+        musicWindow.classList.remove('open', 'maximized', 'minimized');
+        musicWindow.setAttribute('aria-hidden', 'true');
+    });
+    document.querySelector('[data-action="minimize-music"]').addEventListener('click', () => {
+        musicWindow.classList.add('minimized');
+    });
+    document.querySelector('[data-action="maximize-music"]').addEventListener('click', () => {
+        musicWindow.classList.toggle('maximized');
+        if (musicWindow.classList.contains('minimized')) {
+            musicWindow.classList.remove('minimized');
+        }
+    });
+
+    // --- Play/Pause ---
+    playPauseBtn.addEventListener('click', () => {
+        if (bgMusic.paused) {
+            bgMusic.play().catch(() => {});
+            playPauseBtn.textContent = '⏸️';
+        } else {
+            bgMusic.pause();
+            playPauseBtn.textContent = '▶️';
+        }
+    });
+
+    // --- Volume slider ---
+    musicVolumeSlider.addEventListener('input', () => {
+        bgMusic.volume = parseFloat(musicVolumeSlider.value);
+        updateVolumeLabel();
+        if (bgMusic.volume === 0) {
+            musicMuteBtn.textContent = '🔇';
+        } else {
+            musicMuteBtn.textContent = '🔊';
+        }
+        if (bgMusic.muted) {
+            bgMusic.muted = false;
+            musicMuteBtn.textContent = '🔊';
+        }
+    });
+
+    // --- Mute toggle ---
+    musicMuteBtn.addEventListener('click', () => {
+        bgMusic.muted = !bgMusic.muted;
+        musicMuteBtn.textContent = bgMusic.muted ? '🔇' : '🔊';
+    });
+
+    function updateVolumeLabel() {
+        const val = Math.round(bgMusic.volume * 100);
+        volumeLabel.textContent = val + '%';
+    }
+
+    // --- Progress slider ---
+    bgMusic.addEventListener('loadedmetadata', () => {
+        const total = formatTime(bgMusic.duration);
+        totalTimeLabel.textContent = total;
+    });
+    bgMusic.addEventListener('timeupdate', () => {
+        const percent = bgMusic.currentTime / bgMusic.duration;
+        musicProgressSlider.value = percent;
+        currentTimeLabel.textContent = formatTime(bgMusic.currentTime);
+    });
+    musicProgressSlider.addEventListener('input', () => {
+        const seekTo = parseFloat(musicProgressSlider.value) * bgMusic.duration;
+        bgMusic.currentTime = seekTo;
+    });
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    // --- Auto-start on first interaction ---
+    let musicStarted = false;
+    const startMusic = () => {
+        if (!musicStarted) {
+            bgMusic.play().catch(() => {});
+            playPauseBtn.textContent = '⏸️';
+            musicStarted = true;
+            if (bgMusic.duration) {
+                totalTimeLabel.textContent = formatTime(bgMusic.duration);
+            }
+            document.removeEventListener('click', startMusic);
+            document.removeEventListener('touchstart', startMusic);
+        }
+    };
+    document.addEventListener('click', startMusic);
+    document.addEventListener('touchstart', startMusic);
+
+    // --- Open music window from header button ---
+    document.getElementById('openMusicBtn').addEventListener('click', () => {
+        musicWindow.classList.remove('minimized', 'maximized');
+        musicWindow.classList.add('open');
+        musicWindow.setAttribute('aria-hidden', 'false');
+        playPauseBtn.textContent = bgMusic.paused ? '▶️' : '⏸️';
+    });
+
+    /* ---------- Event wiring ---------- */
+    function wireEvents() {
+        // FAB
+        $('#fabAdd').addEventListener('click', (e) => { ripple(e, e.currentTarget);
+            modal.open(); });
+
+        // Modal
+        $('#modalCancel').addEventListener('click', () => modal.close());
+        $('#modalConfirm').addEventListener('click', () => modal.confirm());
+        $('#modalBackdrop').addEventListener('click', (e) => {
+            if (e.target.id === 'modalBackdrop') modal.close();
+        });
+        $('#categoryNameInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') modal.confirm();
+            if (e.key === 'Escape') modal.close();
+        });
+
+        // Sound toggle
+        $('#soundToggle').addEventListener('click', (e) => {
+            state.soundOn = !state.soundOn;
+            e.currentTarget.classList.toggle('muted', !state.soundOn);
+            e.currentTarget.querySelector('.sound-icon').textContent = state.soundOn ? '🔊' : '🔇';
+            saveState();
+            if (state.soundOn) Sound.click();
+        });
+
+        // Filter / sort
+        $$('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                ripple(e, btn);
+                $$('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.filter = btn.dataset.filter;
+                saveState();
+                renderCategories();
+                Sound.click();
+            });
+        });
+        $('#sortSelect').addEventListener('change', (e) => {
+            state.sort = e.target.value;
+            saveState();
+            renderCategories();
+            Sound.click();
+        });
+        $('#searchInput').addEventListener('input', () => renderCategories());
+
+        // Delegated card events
+        $('#categoriesContainer').addEventListener('click', (e) => {
+            const card = e.target.closest('.category-card');
+            if (!card) return;
+            const catId = card.dataset.id;
+            const action = e.target.closest('[data-action]')?.dataset.action;
+
+            const btn = e.target.closest('.card-btn, .collapse-btn, .add-item-row button');
+            if (btn) ripple(e, btn);
+
+            if (action === 'collapse') toggleCollapse(catId);
+            else if (action === 'delete') deleteCategory(catId);
+            else if (action === 'notes') notes.open(catId);
+            else if (action === 'focus-add') {
+                const inp = card.querySelector('[data-role="new-item"]');
+                if (inp) { inp.focus();
+                    Sound.click(); }
+            } else if (action === 'add-item') {
+                const inp = card.querySelector('[data-role="new-item"]');
+                if (inp) { addItem(catId, inp.value); }
+            } else if (action === 'toggle') {
+                const itemEl = e.target.closest('.item');
+                if (itemEl) toggleItem(catId, itemEl.dataset.itemId);
+            } else if (action === 'delete-item') {
+                const itemEl = e.target.closest('.item');
+                if (itemEl) deleteItem(catId, itemEl.dataset.itemId);
+            }
+        });
+
+        // Enter to add item
+        $('#categoriesContainer').addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter') return;
+            const inp = e.target.closest('[data-role="new-item"]');
+            if (!inp) return;
+            const card = inp.closest('.category-card');
+            if (!card) return;
+            addItem(card.dataset.id, inp.value);
+        });
+
+        // Notes window controls
+        $$('.tl', notes.win).forEach(btn => {
+            btn.addEventListener('click', () => {
+                const a = btn.dataset.action;
+                if (a === 'close') notes.close();
+                else if (a === 'minimize') {
+                    notes.win.classList.add('minimized');
+                    Sound.close();
+                } else if (a === 'maximize') {
+                    notes.win.classList.toggle('maximized');
+                    Sound.click();
+                }
+            });
+        });
+
+        // Autosave notes
+        let notesTimer = null;
+        notes.area.addEventListener('input', () => {
+            clearTimeout(notesTimer);
+            notesTimer = setTimeout(() => notes.save(), 300);
+        });
+
+        // ESC closes modal/notes
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (modal.backdrop.classList.contains('open')) modal.close();
+                else if (notes.win.classList.contains('open')) notes.close();
+            }
+        });
+    }
+
+    /* ---------- Import from PDF / Word / Text ---------- */
+    const ImportFeature = (() => {
+        let parsedCategories = null; // result waiting to be confirmed
+
+        function isBulletOrNumbered(line) {
+            return /^\s*([-*•▪◦]|\d+[.)]|\(\d+\))\s+/.test(line);
+        }
+        function stripBullet(line) {
+            return line.replace(/^\s*([-*•▪◦]|\d+[.)]|\(\d+\))\s+/, '').trim();
+        }
+        function isNoteLine(line) {
+            return /^\s*notes?\s*:/i.test(line);
+        }
+        function stripNotePrefix(line) {
+            return line.replace(/^\s*notes?\s*:/i, '').trim();
+        }
+
+        function parseTextToCategories(rawText) {
+            const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+            const cats = [];
+            let current = null;
+
+            for (const line of lines) {
+                if (isNoteLine(line)) {
+                    if (!current) { current = { name: 'Imported', items: [], notes: '' }; cats.push(current); }
+                    const noteText = stripNotePrefix(line);
+                    current.notes = current.notes ? current.notes + '\n' + noteText : noteText;
+                    continue;
+                }
+                if (isBulletOrNumbered(line)) {
+                    if (!current) { current = { name: 'Imported', items: [], notes: '' }; cats.push(current); }
+                    const itemName = stripBullet(line);
+                    if (itemName) current.items.push(itemName);
+                    continue;
+                }
+                // Plain line with no bullet -> treat as a new category heading
+                current = { name: line.replace(/:$/, ''), items: [], notes: '' };
+                cats.push(current);
+            }
+            // Drop any empty leftover categories
+            return cats.filter(c => c.items.length > 0 || c.notes);
+        }
+
+        async function extractText(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'txt') {
+                return await file.text();
+            }
+            if (ext === 'pdf') {
+                const buf = await file.arrayBuffer();
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+                let text = '';
+                for (let p = 1; p <= pdf.numPages; p++) {
+                    const page = await pdf.getPage(p);
+                    const content = await page.getTextContent();
+                    // Group by vertical position so each line of the PDF stays its own line
+                    let lastY, line = '';
+                    for (const item of content.items) {
+                        if (lastY !== undefined && Math.abs(item.transform[5] - lastY) > 2) {
+                            text += line + '\n';
+                            line = '';
+                        }
+                        line += item.str;
+                        lastY = item.transform[5];
+                    }
+                    text += line + '\n';
+                }
+                return text;
+            }
+            if (ext === 'docx') {
+                const buf = await file.arrayBuffer();
+                const result = await mammoth.extractRawText({ arrayBuffer: buf });
+                return result.value;
+            }
+            throw new Error('Unsupported file type');
+        }
+
+        function renderPreview(cats) {
+            const preview = $('#importPreview');
+            if (!cats.length) {
+                preview.innerHTML = '<em>Nothing recognizable was found in that file — try a file with plain bullet points or a simple list.</em>';
+                preview.style.display = 'block';
+                return;
+            }
+            let html = '';
+            for (const cat of cats) {
+                html += `<div class="import-preview-cat">📖 ${escapeHtml(cat.name)}</div>`;
+                for (const item of cat.items) {
+                    html += `<div class="import-preview-item">• ${escapeHtml(item)}</div>`;
+                }
+                if (cat.notes) {
+                    html += `<div class="import-preview-note">📝 ${escapeHtml(cat.notes).replace(/\n/g, '<br>')}</div>`;
+                }
+            }
+            preview.innerHTML = html;
+            preview.style.display = 'block';
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function applyImport() {
+            if (!parsedCategories || !parsedCategories.length) return;
+            for (const cat of parsedCategories) {
+                const newCat = {
+                    id: uid(),
+                    name: cat.name || 'Imported',
+                    items: cat.items.map(name => ({ id: uid(), name, done: false, createdAt: Date.now() })),
+                    notes: cat.notes || '',
+                    collapsed: false,
+                    createdAt: Date.now()
+                };
+                state.categories.unshift(newCat);
+            }
+            saveState();
+            renderCategories();
+            Sound.create();
+            closeImportModal();
+        }
+
+        function openImportModal() {
+            $('#importBackdrop').classList.add('open');
+            $('#importFileInput').value = '';
+            $('#importStatus').textContent = '';
+            $('#importPreview').style.display = 'none';
+            $('#importPreview').innerHTML = '';
+            $('#importConfirmBtn').disabled = true;
+            parsedCategories = null;
+        }
+        function closeImportModal() {
+            $('#importBackdrop').classList.remove('open');
+        }
+
+        function wire() {
+            $('#fabImport').addEventListener('click', openImportModal);
+            $('#importCancelBtn').addEventListener('click', closeImportModal);
+            $('#importBackdrop').addEventListener('click', (e) => {
+                if (e.target.id === 'importBackdrop') closeImportModal();
+            });
+            $('#importConfirmBtn').addEventListener('click', applyImport);
+            $('#importFileInput').addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                $('#importStatus').textContent = 'Reading your document…';
+                $('#importConfirmBtn').disabled = true;
+                try {
+                    const text = await extractText(file);
+                    parsedCategories = parseTextToCategories(text);
+                    const itemCount = parsedCategories.reduce((n, c) => n + c.items.length, 0);
+                    $('#importStatus').textContent = `Found ${parsedCategories.length} categor${parsedCategories.length === 1 ? 'y' : 'ies'} and ${itemCount} item${itemCount === 1 ? '' : 's'}. Review below, then confirm.`;
+                    renderPreview(parsedCategories);
+                    $('#importConfirmBtn').disabled = parsedCategories.length === 0;
+                } catch (err) {
+                    console.warn('Import failed', err);
+                    $('#importStatus').textContent = 'Could not read that file. Try a .txt, .pdf, or .docx file.';
+                }
+            });
+        }
+
+        return { wire };
+    })();
+
+    /* ---------- Init ---------- */
+    function init() {
+        applyTheme();
+        $('#soundToggle').classList.toggle('muted', !state.soundOn);
+        $('#soundToggle').querySelector('.sound-icon').textContent = state.soundOn ? '🔊' : '🔇';
+        $$('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === state.filter));
+        $('#sortSelect').value = state.sort;
+
+        initAmbient();
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        renderCategories();
+        wireEvents();
+        ImportFeature.wire();
+
+        // Initialize Snitch game
+        snitchGame.init();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    // Register the offline cache (service worker) so the site works
+    // instantly and even with no internet after the first visit.
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(e => console.warn('SW registration failed', e));
+        });
+    }
+</script>
+</body>
+</html>
