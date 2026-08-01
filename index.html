@@ -2302,10 +2302,10 @@
         let parsedCategories = null; // result waiting to be confirmed
 
         function isBulletOrNumbered(line) {
-            return /^\s*([-*•▪◦]|\d+[.)]|\(\d+\))\s+/.test(line);
+            return /^\s*([-*•▪◦]|\d+[.)]|\(\d+\))\s*\S/.test(line);
         }
         function stripBullet(line) {
-            return line.replace(/^\s*([-*•▪◦]|\d+[.)]|\(\d+\))\s+/, '').trim();
+            return line.replace(/^\s*([-*•▪◦]|\d+[.)]|\(\d+\))\s*/, '').trim();
         }
         function isNoteLine(line) {
             return /^\s*notes?\s*:/i.test(line);
